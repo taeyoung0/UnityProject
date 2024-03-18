@@ -54,6 +54,7 @@ public class Player : MonoBehaviour
 
         // x값만 움직이게 설정
         transform.position = new Vector3(toX, transform.position.y, transform.position.z ); 
+        
         Shoot();
     }
 
