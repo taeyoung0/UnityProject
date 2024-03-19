@@ -8,6 +8,10 @@ public class Enemy : MonoBehaviour
     private float moveSpeed = 10f;
 
     private float minY = -7;
+
+    public void SetMoveSpeed(float moveSpeed) {
+        this.moveSpeed = moveSpeed;             // 적의 스피드 업데이트 메서드
+    }
     // Update is called once per frame
     void Update()
     {
