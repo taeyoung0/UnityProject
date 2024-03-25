@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class EnemySpawner : MonoBehaviour
@@ -8,6 +9,9 @@ public class EnemySpawner : MonoBehaviour
     // enemies는 게임 오브젝트 배열로, 인스펙터 창에서 설정할 수 있도록 함, 이 배열은 소환할 적 캐릭터의 종류를 나타냄
     [SerializeField]
     private GameObject[] enemies;
+
+    [SerializeField]
+    private GameObject boss;
 
     // 적 캐릭터가 생성될 x좌표를 배열에 넣어줌
     private float[] arrPosX = {-2.2f, -1.1f, 0f, 1.1f, 2.2f};
@@ -28,6 +32,10 @@ public class EnemySpawner : MonoBehaviour
         StartCoroutine("EnemyRoutine");
     }
 
+    public void StopEnemyRoutine() {
+        StopCoroutine("EnemyRoutine");
+    }
+
     // EnemyRoutine() 코루틴은 3초 동안 대기한 후 반복문을 실행
     IEnumerator EnemyRoutine() {
         yield return new WaitForSeconds(3f);
@@ -45,6 +53,12 @@ public class EnemySpawner : MonoBehaviour
             if(spawnCount % 10 == 0) {
                 enemyIndex += 1;                // 적이 10번 나오면 다음단계 다음 단계 적이 나오게 함
                 moveSpeed +=2;              // 난이도에 따라 속도를 2씩 증가
+            }
+
+            if(enemyIndex >= enemies.Length) {
+                SpawnBoss();
+                enemyIndex = 0;
+                moveSpeed = 5f;
             }
 
             yield return new WaitForSeconds(spawnInterval);     // spawnInterval만큼 대기한 후에 다시 반복
@@ -67,6 +81,10 @@ public class EnemySpawner : MonoBehaviour
         GameObject enemyObject = Instantiate(enemies[index], spawnPos, Quaternion.identity);     // Instantiate() 함수를 사용하여 해당 위치에 적 오브젝트를 생성
         Enemy enemy = enemyObject.GetComponent<Enemy>();        // 
         enemy.SetMoveSpeed(moveSpeed);      // +2된 movesSpeed 매개변수를 enemy클래스의 스피드 업데이트 메서드에 전달
+    }
+
+    void SpawnBoss() {
+        Instantiate(boss, transform.position, Quaternion.identity);
     }
   
 }

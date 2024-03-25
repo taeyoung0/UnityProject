@@ -7,8 +7,9 @@ public class Player : MonoBehaviour
     // 유니티 엔진에서 moveSpeed 값을 조정할 수있게 해줌
     [SerializeField]
 
-    private GameObject weapon;
+    private GameObject[] weapons;
 
+    private int weaponIndex = 0;
     [SerializeField]
     private float moveSpeed; 
 
@@ -55,14 +56,34 @@ public class Player : MonoBehaviour
         // x값만 움직이게 설정
         transform.position = new Vector3(toX, transform.position.y, transform.position.z ); 
         
-        Shoot();
+        if (GameManager.instance.isGameOver == false) {
+            Shoot();
+        }
     }
 
     void Shoot() {
         if (Time.time - lastshotTime > shootInterval){
-            Instantiate(weapon, shootTransform.position, Quaternion.identity);
+            Instantiate(weapons[weaponIndex], shootTransform.position, Quaternion.identity);
             lastshotTime = Time.time;
             }
         
+    }
+
+    private void OnTriggerEnter2D(Collider2D other) {
+        if (other.gameObject.tag == "Enemy" || other.gameObject.tag =="Boss") {
+            GameManager.instance.SetGameOver();
+            Destroy(gameObject);
+        }
+        else if (other.gameObject.tag == "Coin") {
+            GameManager.instance.IncreaseCoin();
+            Destroy(other.gameObject);
+        }
+    }
+
+    public void Upgrade() {
+        weaponIndex += 1;
+        if (weaponIndex >= weapons.Length) {
+            weaponIndex = weapons.Length - 1;
+        }
     }
 }

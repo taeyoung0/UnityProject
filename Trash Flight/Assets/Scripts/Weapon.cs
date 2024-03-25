@@ -6,7 +6,9 @@ public class Weapon : MonoBehaviour
 {
     // 다른 클래스에서는 제어할 수 없게 유니티에서는 제어할 수 있게 해준거임
     [SerializeField]
-    private float moveSpeed = 10;
+    private float moveSpeed = 10f;
+
+    public float damage = 1f;
     // Start is called before the first frame update
     void Start()
     {
